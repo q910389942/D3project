@@ -1,0 +1,34 @@
+cat > .gitignore << 'EOF'
+# --- editor / system ---
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# --- python ---
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+
+# --- training outputs / logs ---
+logs/
+outputs/
+results/
+work_dirs/
+runs/
+checkpoints/
+*.pth
+*.pt
+*.ckpt
+
+# --- big / local env ---
+miniconda/
+myenv_*.txt
+packages.txt
+
+# --- datasets ---
+dataset/
+EOF

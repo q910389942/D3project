@@ -1,0 +1,105 @@
+# Stable Diffusion 3 图像生成与目标检测项目依赖
+
+# ========== 核心深度学习框架 ==========
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# ========== 图像生成相关 ==========
+# HuggingFace Diffusers - Stable Diffusion 3 支持
+diffusers>=0.27.0
+transformers>=4.35.0
+accelerate>=0.25.0
+safetensors>=0.4.0
+pillow>=10.0.0
+
+# ========== 目标检测框架 ==========
+# MMDetection 及其依赖
+# 注意：MMCV 版本必须 <2.2.0，否则会报错
+mmdet>=3.1.0
+mmcv>=2.1.0,<2.2.0  # 必须小于 2.2.0
+mmengine>=0.10.0
+
+# ========== 数据处理 ==========
+# COCO 数据集工具
+pycocotools>=2.0.7
+
+# YAML 配置文件解析
+pyyaml>=6.0
+
+# ========== 可视化 ==========
+matplotlib>=3.7.0
+
+# ========== API 客户端 ==========
+# OpenAI API 客户端
+openai>=1.0.0
+
+# ========== 工具库 ==========
+# 文件锁（虽然代码中导入但未使用，但保留以防需要）
+filelock>=3.13.0
+
+# ========== 可选但推荐的依赖 ==========
+# 用于更好的性能
+numpy>=1.24.0
+opencv-python>=4.8.0
+
+# ========== Mac 安装说明 ==========
+# 
+# 1. 创建 conda 环境（推荐 Python 3.10 或 3.11）：
+#    conda create -n sd3_env python=3.10
+#    conda activate sd3_env
+#
+# 2. 安装 PyTorch（Mac CPU 版本，支持 Apple Silicon MPS 加速）：
+#    # 对于 Apple Silicon (M1/M2/M3)：
+#    conda install pytorch torchvision torchaudio -c pytorch
+#    # 或者使用 pip：
+#    pip install torch torchvision torchaudio
+#
+# 3. 安装其他依赖：
+#    pip install -r requirements.txt
+#
+# 4. MMDetection 安装注意事项：
+#    - MMDetection 在 Mac 上可能需要额外配置
+#    - 如果遇到编译问题，可能需要安装 Xcode Command Line Tools：
+#      xcode-select --install
+#    - 参考：https://mmdetection.readthedocs.io/en/latest/get_started.html#installation
+#
+# 5. OpenAI API Key 设置：
+#    export OPENAI_API_KEY="your-api-key-here"
+#    或者在代码运行时通过环境变量设置
+#
+# 6. 性能提示：
+#    - Apple Silicon Mac 会自动使用 MPS 加速（如果 PyTorch 支持）
+#    - 如果没有 GPU，图像生成和检测会较慢，建议：
+#      * 减少 --inferstep 参数（如 20-30 步）
+#      * 减少生成图像数量
+#      * 考虑使用较小的模型
+#
+# 7. 代码适配 Mac 的重要提示：
+#    ⚠️ 代码中多处硬编码了 "cuda"，在 Mac 上需要修改：
+#    
+#    需要修改的位置（在 sd_release.py 中）：
+#    - 第 68, 87 行：torch.Generator("cuda") 
+#      改为：torch.Generator("mps") 或 torch.Generator("cpu")
+#    
+#    - 第 465, 468 行：pipe.to("cuda")
+#      改为：pipe.to("mps") 或 pipe.to("cpu")
+#    
+#    - 第 499, 504 行：device='cuda:0'
+#      改为：device='mps' 或 device='cpu'
+#    
+#    建议添加设备自动检测：
+#    import torch
+#    if torch.backends.mps.is_available():
+#        device = "mps"
+#    elif torch.cuda.is_available():
+#        device = "cuda"
+#    else:
+#        device = "cpu"
+#
+# 8. 常见问题：
+#    - 如果遇到 "mps" 相关错误，可以在代码中强制使用 CPU：
+#      将 "cuda" 改为 "cpu"（但会非常慢）
+#    - MMDetection 在 Mac 上可能需要从源码安装或使用预编译版本
+#    - MMDetection 可能不支持 MPS，建议使用 CPU
+
